@@ -1,11 +1,13 @@
 package com.carlosvega.literalura.main;
 
 import com.carlosvega.literalura.converter.JsonConverter;
-import com.carlosvega.literalura.models.BookData;
 import com.carlosvega.literalura.models.BookList;
 import com.carlosvega.literalura.service.ReadApi;
 
+import com.carlosvega.literalura.models.Book;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
     //variables and constants
@@ -23,17 +25,25 @@ public class Main {
             "5- Mostrar libros por idioma\n" +
             "0- Salir\n" +
             "Su eleccion: ";
-    int userElection;
+
     public void showMenu(){
         var json = apireader.obtenerDatos(URL_BASE);
         var serializado = jsonConverter.obtenerDatos(json, BookList.class);
-        System.out.println(serializado);
+        //System.out.println(serializado);
+
+        //map all books
+        var booksListData = serializado.bookData();
+        List<Book> bookList = booksListData.stream()
+                .map(b -> new Book(b))
+                .collect(Collectors.toList());
+
+        bookList.forEach(System.out::println);
 
         //init program
         System.out.println(initialMessage);
-        userElection = input.nextInt();
+        userOption = input.nextInt();
         input.nextLine();
-        switch (userElection){
+        switch (userOption){
             case(1):
                 method1();
         }
@@ -48,4 +58,8 @@ public class Main {
     //option4
     //option5
     //option0
+
+
+
+
 }
