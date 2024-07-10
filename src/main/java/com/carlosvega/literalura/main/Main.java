@@ -48,12 +48,6 @@ public class Main {
         bookList = booksListData.stream()
                 .map(b -> new Book(b))
                 .collect(Collectors.toList());
-        //map authors class
-        authorList = booksListData.stream()
-                .flatMap(b -> b.authorDataList().stream()
-                        .map(a->new Author(a)))
-                        .collect(Collectors.toList());
-
         //bookList.forEach(System.out::println);
 
         //init program
@@ -72,11 +66,22 @@ public class Main {
         String inputTitle = input.nextLine();
         var json = apireader.obtenerDatos(URL_BASE + "?search=" + inputTitle.replace(" ","+"));
         var serializado = jsonConverter.obtenerDatos(json, BookList.class);
+        //find book but datatype Bookdata
         Optional<BookData> wantedBook = serializado.bookData().stream()
                 .filter(l -> l.title().toUpperCase().contains(inputTitle.toUpperCase()))
                 .findFirst();
         if(wantedBook.isPresent()){
             System.out.println("libro encontrado: " + wantedBook.get());
+            //pass data to book object
+            Book book = new Book(wantedBook.get());
+            //map authors from object book
+            authorList = wantedBook.get()
+                    .authorDataList().stream()
+                    .map(a->new Author(a))
+                    .collect(Collectors.toList());
+            book.setAuthorList(authorList);
+        }else {
+            System.out.println("No se encontro el libro");
         }
 
     }
