@@ -1,6 +1,5 @@
 package com.carlosvega.literalura.models;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,8 +13,10 @@ public class Book {
     @Column(unique = true)
     private String title;
     private String copyright;
-    @Transient
+    @OneToMany(mappedBy = "book")
     private List<AuthorData> authorDataList;
+
+    public Book(){}
 
     //constructor
     public Book(BookData bookData) {
@@ -30,6 +31,6 @@ public class Book {
         return "id=" + id +
                 ", titulo='" + title + '\'' +
                 ", copyright='" + copyright + '\'' +
-                ", autor(es)=" + authorDataList.toString();
+                ", autor(es)=" + authorDataList;
     }
 }

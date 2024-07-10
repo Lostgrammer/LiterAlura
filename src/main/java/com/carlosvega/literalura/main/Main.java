@@ -4,6 +4,7 @@ import com.carlosvega.literalura.converter.JsonConverter;
 import com.carlosvega.literalura.models.Author;
 import com.carlosvega.literalura.models.BookData;
 import com.carlosvega.literalura.models.BookList;
+import com.carlosvega.literalura.repository.IBookRepository;
 import com.carlosvega.literalura.service.ReadApi;
 
 import com.carlosvega.literalura.models.Book;
@@ -31,6 +32,11 @@ public class Main {
     private String requestTitleMessage = "Escriba el nomobre del libro que desea buscar:";
     List<Book> bookList;
     List<Author> authorList;
+    private IBookRepository bookRepository;
+
+    public Main(IBookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     public void showMenu(){
         var json = apireader.obtenerDatos(URL_BASE);
@@ -72,6 +78,7 @@ public class Main {
         if(wantedBook.isPresent()){
             System.out.println("libro encontrado: " + wantedBook.get());
         }
+
     }
 
     //option2
