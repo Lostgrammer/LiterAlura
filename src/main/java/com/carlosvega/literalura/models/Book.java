@@ -14,7 +14,7 @@ public class Book {
     private String title;
     private String copyright;
     @OneToMany(mappedBy = "book")
-    private List<AuthorData> authorDataList;
+    private List<Author> authorList; //mal, debe ser de la clase author
 
     public Book(){}
 
@@ -23,7 +23,15 @@ public class Book {
         this.id = Long.valueOf(bookData.id());
         this.title = bookData.title();
         this.copyright = bookData.copyright();
-        this.authorDataList = bookData.authorDataList();
+    }
+
+    //getter setter
+    public List<Author> getAuthorList() {
+        return authorList;
+    }
+    public void setAuthorList(List<Author> authorList) {
+        authorList.forEach(e -> e.setBook(this));
+        this.authorList = authorList;
     }
 
     @Override
@@ -31,6 +39,6 @@ public class Book {
         return "id=" + id +
                 ", titulo='" + title + '\'' +
                 ", copyright='" + copyright + '\'' +
-                ", autor(es)=" + authorDataList;
+                ", autor(es)=" + authorList;
     }
 }
