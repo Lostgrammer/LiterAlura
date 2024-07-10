@@ -1,11 +1,14 @@
 package com.carlosvega.literalura.main;
 
 import com.carlosvega.literalura.converter.JsonConverter;
+import com.carlosvega.literalura.models.Author;
+import com.carlosvega.literalura.models.BookData;
 import com.carlosvega.literalura.models.BookList;
 import com.carlosvega.literalura.service.ReadApi;
 
 import com.carlosvega.literalura.models.Book;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -16,7 +19,7 @@ public class Main {
     JsonConverter jsonConverter = new JsonConverter();
     private int userOption;
     Scanner input = new Scanner(System.in);
-    String initialMessage = "-------------------------\n" +
+    private String initialMessage = "-------------------------\n" +
             "Elija una de las siguientes opciones: \n" +
             "1- Buscar libro por titulo\n" +
             "2- Mostrar libros registrados\n" +
@@ -25,19 +28,27 @@ public class Main {
             "5- Mostrar libros por idioma\n" +
             "0- Salir\n" +
             "Su eleccion: ";
+    private String requestTitleMessage = "Escriba el nomobre del libro que desea buscar:";
+    List<Book> bookList;
+    List<Author> authorList;
 
     public void showMenu(){
         var json = apireader.obtenerDatos(URL_BASE);
         var serializado = jsonConverter.obtenerDatos(json, BookList.class);
         //System.out.println(serializado);
 
-        //map all books
+        //map books class
         var booksListData = serializado.bookData();
-        List<Book> bookList = booksListData.stream()
+        bookList = booksListData.stream()
                 .map(b -> new Book(b))
                 .collect(Collectors.toList());
+        //map authors class
+        authorList = booksListData.stream()
+                .flatMap(b -> b.authorDataList().stream()
+                        .map(a->new Author(a)))
+                        .collect(Collectors.toList());
 
-        bookList.forEach(System.out::println);
+        //bookList.forEach(System.out::println);
 
         //init program
         System.out.println(initialMessage);
@@ -45,21 +56,28 @@ public class Main {
         input.nextLine();
         switch (userOption){
             case(1):
-                method1();
+                searchBook();
+        }
+
+    }
+    //option1
+    public void searchBook(){
+        System.out.println(requestTitleMessage);
+        String inputTitle = input.nextLine();
+        var json = apireader.obtenerDatos(URL_BASE + "?search=" + inputTitle.replace(" ","+"));
+        var serializado = jsonConverter.obtenerDatos(json, BookList.class);
+        Optional<BookData> wantedBook = serializado.bookData().stream()
+                .filter(l -> l.title().toUpperCase().contains(inputTitle.toUpperCase()))
+                .findFirst();
+        if(wantedBook.isPresent()){
+            System.out.println("libro encontrado: " + wantedBook.get());
         }
     }
 
-    //option1
-    public void method1(){
-
-    }
     //option2
     //option3
     //option4
     //option5
     //option0
-
-
-
 
 }
