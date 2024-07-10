@@ -13,7 +13,7 @@ public class Book {
     @Column(unique = true)
     private String title;
     private String copyright;
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Author> authorList; //mal, debe ser de la clase author
 
     public Book(){}

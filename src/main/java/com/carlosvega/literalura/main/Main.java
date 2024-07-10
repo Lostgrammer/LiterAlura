@@ -58,9 +58,14 @@ public class Main {
         switch (userOption){
             case(1):
                 searchBook();
+                break;
+            case(2):
+                showBook();
+                break;
         }
 
     }
+
     //option1
     public void searchBook(){
         System.out.println(requestTitleMessage);
@@ -90,6 +95,13 @@ public class Main {
     }
 
     //option2
+    private void showBook() {
+        List<Book> bookDb = bookRepository.findAll();
+        bookDb.forEach(System.out::println);
+        //System.out.println(bookDb);
+    }
+
+
     //option3
     //option4
     //option5
