@@ -20,6 +20,13 @@ public class Author {
         this.name = a.name();
         this.birthYear = a.birthYear();
     }
+    //getters setter
+    public Book getBook() {
+        return book;
+    }
+    public void setBook(Book book) {
+        this.book = book;
+    }
 
     @Override
     public String toString() {
