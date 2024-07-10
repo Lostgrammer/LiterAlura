@@ -34,6 +34,7 @@ public class Main {
     List<Author> authorList;
     private IBookRepository bookRepository;
 
+    //contructor with dependency
     public Main(IBookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
@@ -80,6 +81,8 @@ public class Main {
                     .map(a->new Author(a))
                     .collect(Collectors.toList());
             book.setAuthorList(authorList);
+
+            bookRepository.save(book);
         }else {
             System.out.println("No se encontro el libro");
         }

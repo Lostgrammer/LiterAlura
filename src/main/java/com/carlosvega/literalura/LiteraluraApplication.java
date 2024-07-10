@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class LiteraluraApplication implements CommandLineRunner {
 
+	//dependency injections
 	@Autowired
 	private IBookRepository bookRepository;
 	public static void main(String[] args) {
