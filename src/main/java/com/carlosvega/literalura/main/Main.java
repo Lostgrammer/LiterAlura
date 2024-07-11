@@ -19,7 +19,7 @@ public class Main {
     private final String URL_BASE = "https://gutendex.com/books/";
     ReadApi apireader = new ReadApi();
     JsonConverter jsonConverter = new JsonConverter();
-    private int userOption;
+    private int userOption = -1;
     Scanner input = new Scanner(System.in);
     private String initialMessage = "-------------------------\n" +
             "Elija una de las siguientes opciones: \n" +
@@ -37,6 +37,7 @@ public class Main {
     private AuthorRepository authorRepository;
     List<Book> bookDb;
     List<Author> authorDb;
+    private int finishProgramValue = 0;
 
     //contructor with dependency
     public Main(BookRepository bookRepository, AuthorRepository authorRepository) {
@@ -55,21 +56,25 @@ public class Main {
                 .collect(Collectors.toList());
 
         //init program
-        System.out.println(initialMessage);
-        userOption = input.nextInt();
-        input.nextLine();
-        switch (userOption){
-            case(1):
-                searchBook();
-                break;
-            case(2):
-                showBooks();
-                break;
-            case(3):
-                showAuthors();
-                break;
+        while(userOption != finishProgramValue){
+            System.out.println(initialMessage);
+            userOption = input.nextInt();
+            input.nextLine();
+            switch (userOption){
+                case(0):
+                    finishProgram();
+                    break;
+                case(1):
+                    searchBook();
+                    break;
+                case(2):
+                    showBooks();
+                    break;
+                case(3):
+                    showAuthors();
+                    break;
+            }
         }
-
     }
 
     //option1
@@ -133,5 +138,8 @@ public class Main {
     //option4
     //option5
     //option0
+    private void finishProgram() {
+        System.out.println("Programa Finalizado");
+    }
 
 }
