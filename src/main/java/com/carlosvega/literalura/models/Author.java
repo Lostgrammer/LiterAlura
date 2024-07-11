@@ -9,18 +9,18 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private Integer birthYear;
     @ManyToOne
     private Book book;
 
-    //constructor
+    //constructors
     public Author(){}
     public Author(AuthorData a) {
         this.name = a.name();
         this.birthYear = a.birthYear();
     }
+
     //getters setter
     public Book getBook() {
         return book;

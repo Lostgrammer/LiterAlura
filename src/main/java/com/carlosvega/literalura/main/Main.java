@@ -83,10 +83,11 @@ public class Main {
         String inputTitle = input.nextLine();
         var json = apireader.obtenerDatos(URL_BASE + "?search=" + inputTitle.replace(" ","+"));
         var serializado = jsonConverter.obtenerDatos(json, BookList.class);
-        //find book but datatype Bookdata
+        //find book from record Bookdata
         Optional<BookData> bookOptional = serializado.bookData().stream()
                 .filter(l -> l.title().toUpperCase().contains(inputTitle.toUpperCase()))
                 .findFirst();
+        //if the book is found
         if(bookOptional.isPresent()){
             var wantedBook = bookOptional.get();
             System.out.println("libro encontrado: " + wantedBook);
@@ -99,7 +100,7 @@ public class Main {
                     .collect(Collectors.toList());
             book.setAuthorList(authorList);
             //check if the book is not registered on db
-            chargeBooksDb(); //charge db
+            chargeBooksDb(); //charge db data
             if (compareBooks(book)){
                 bookRepository.save(book);
             }else {
@@ -110,7 +111,7 @@ public class Main {
         }
 
     }
-    //check if it isnt the same book
+    //check if it is not the same book
     private boolean compareBooks(Book newBook){
         for(var i : bookDb){
             if (i.getId().equals(newBook.getId())){
@@ -135,11 +136,9 @@ public class Main {
         authorDb = authorRepository.findAll();
         authorDb.forEach(System.out::println);
     }
-    //option4
-    //option5
+
     //option0
     private void finishProgram() {
         System.out.println("Programa Finalizado");
     }
-
 }

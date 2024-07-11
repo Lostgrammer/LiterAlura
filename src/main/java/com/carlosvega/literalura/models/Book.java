@@ -7,6 +7,7 @@ import java.util.List;
 @Entity
 @Table(name = "books")
 public class Book {
+
     //variables
     @Id
     private Long id;
@@ -16,9 +17,8 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Author> authorList;
 
+    //constructors
     public Book(){}
-
-    //constructor
     public Book(BookData bookData) {
         this.id = Long.valueOf(bookData.id());
         this.title = bookData.title();
