@@ -38,6 +38,8 @@ public class Main {
     //contructor with dependency
     public Main(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
+        //initialize books data on db
+        bookDb = bookRepository.findAll();
     }
 
     public void showMenu(){
@@ -61,14 +63,18 @@ public class Main {
                 searchBook();
                 break;
             case(2):
-                showBook();
+                showBooks();
                 break;
+            case(3):
+                showAuthors();
         }
 
     }
 
+
+
     //option1
-    public void searchBook(){
+    private void searchBook(){
         System.out.println(requestTitleMessage);
         String inputTitle = input.nextLine();
         var json = apireader.obtenerDatos(URL_BASE + "?search=" + inputTitle.replace(" ","+"));
@@ -88,22 +94,36 @@ public class Main {
                     .map(a->new Author(a))
                     .collect(Collectors.toList());
             book.setAuthorList(authorList);
-
-            bookRepository.save(book);
+            //check if the book is not registered on db
+            if (compareBooks(book)){
+                bookRepository.save(book);
+            }else {
+                System.out.println("No se puede volver a registrar el mismo libro");
+            }
         }else {
             System.out.println("No se encontro el libro");
         }
 
     }
+    //check if it isnt the same book
+    private boolean compareBooks(Book newBook){
+        for(var i : bookDb){
+            if (i.getId().equals(newBook.getId())){
+                return false;
+            }
+        }
+        return true;
+    }
 
     //option2
-    private void showBook() {
+    private void showBooks() {
         bookDb = bookRepository.findAll();
         bookDb.forEach(System.out::println);
     }
 
-
     //option3
+    private void showAuthors() {
+    }
     //option4
     //option5
     //option0
