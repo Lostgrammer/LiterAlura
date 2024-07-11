@@ -4,7 +4,7 @@ import com.carlosvega.literalura.converter.JsonConverter;
 import com.carlosvega.literalura.models.Author;
 import com.carlosvega.literalura.models.BookData;
 import com.carlosvega.literalura.models.BookList;
-import com.carlosvega.literalura.repository.IBookRepository;
+import com.carlosvega.literalura.repository.BookRepository;
 import com.carlosvega.literalura.service.ReadApi;
 
 import com.carlosvega.literalura.models.Book;
@@ -32,10 +32,11 @@ public class Main {
     private String requestTitleMessage = "Escriba el nomobre del libro que desea buscar:";
     List<Book> bookList;
     List<Author> authorList;
-    private IBookRepository bookRepository;
+    private BookRepository bookRepository;
+    List<Book> bookDb;
 
     //contructor with dependency
-    public Main(IBookRepository bookRepository) {
+    public Main(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
@@ -73,15 +74,16 @@ public class Main {
         var json = apireader.obtenerDatos(URL_BASE + "?search=" + inputTitle.replace(" ","+"));
         var serializado = jsonConverter.obtenerDatos(json, BookList.class);
         //find book but datatype Bookdata
-        Optional<BookData> wantedBook = serializado.bookData().stream()
+        Optional<BookData> bookOptional = serializado.bookData().stream()
                 .filter(l -> l.title().toUpperCase().contains(inputTitle.toUpperCase()))
                 .findFirst();
-        if(wantedBook.isPresent()){
-            System.out.println("libro encontrado: " + wantedBook.get());
+        if(bookOptional.isPresent()){
+            var wantedBook = bookOptional.get();
+            System.out.println("libro encontrado: " + wantedBook);
             //pass data to book object
-            Book book = new Book(wantedBook.get());
+            Book book = new Book(wantedBook);
             //map authors from object book
-            authorList = wantedBook.get()
+            authorList = wantedBook
                     .authorDataList().stream()
                     .map(a->new Author(a))
                     .collect(Collectors.toList());
@@ -96,9 +98,8 @@ public class Main {
 
     //option2
     private void showBook() {
-        List<Book> bookDb = bookRepository.findAll();
+        bookDb = bookRepository.findAll();
         bookDb.forEach(System.out::println);
-        //System.out.println(bookDb);
     }
 
 

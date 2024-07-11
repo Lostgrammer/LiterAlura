@@ -1,7 +1,7 @@
 package com.carlosvega.literalura;
 
 import com.carlosvega.literalura.main.Main;
-import com.carlosvega.literalura.repository.IBookRepository;
+import com.carlosvega.literalura.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +12,7 @@ public class LiteraluraApplication implements CommandLineRunner {
 
 	//dependency injections
 	@Autowired
-	private IBookRepository bookRepository;
+	private BookRepository bookRepository;
 	public static void main(String[] args) {
 		SpringApplication.run(LiteraluraApplication.class, args);
 	}
