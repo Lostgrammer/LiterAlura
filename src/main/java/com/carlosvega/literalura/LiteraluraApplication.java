@@ -1,6 +1,7 @@
 package com.carlosvega.literalura;
 
 import com.carlosvega.literalura.main.Main;
+import com.carlosvega.literalura.repository.AuthorRepository;
 import com.carlosvega.literalura.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,13 +14,15 @@ public class LiteraluraApplication implements CommandLineRunner {
 	//dependency injections
 	@Autowired
 	private BookRepository bookRepository;
+	@Autowired
+	private AuthorRepository authorRepository;
 	public static void main(String[] args) {
 		SpringApplication.run(LiteraluraApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		Main main = new Main(bookRepository);
+		Main main = new Main(bookRepository, authorRepository);
 		main.showMenu();
 	}
 }

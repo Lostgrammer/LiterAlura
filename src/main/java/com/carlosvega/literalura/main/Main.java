@@ -4,6 +4,7 @@ import com.carlosvega.literalura.converter.JsonConverter;
 import com.carlosvega.literalura.models.Author;
 import com.carlosvega.literalura.models.BookData;
 import com.carlosvega.literalura.models.BookList;
+import com.carlosvega.literalura.repository.AuthorRepository;
 import com.carlosvega.literalura.repository.BookRepository;
 import com.carlosvega.literalura.service.ReadApi;
 
@@ -33,26 +34,25 @@ public class Main {
     List<Book> bookList;
     List<Author> authorList;
     private BookRepository bookRepository;
+    private AuthorRepository authorRepository;
     List<Book> bookDb;
+    List<Author> authorDb;
 
     //contructor with dependency
-    public Main(BookRepository bookRepository) {
+    public Main(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
-        //initialize books data on db
-        bookDb = bookRepository.findAll();
+        this.authorRepository = authorRepository;
     }
 
     public void showMenu(){
         var json = apireader.obtenerDatos(URL_BASE);
         var serializado = jsonConverter.obtenerDatos(json, BookList.class);
-        //System.out.println(serializado);
 
         //map books class
         var booksListData = serializado.bookData();
         bookList = booksListData.stream()
                 .map(b -> new Book(b))
                 .collect(Collectors.toList());
-        //bookList.forEach(System.out::println);
 
         //init program
         System.out.println(initialMessage);
@@ -67,11 +67,10 @@ public class Main {
                 break;
             case(3):
                 showAuthors();
+                break;
         }
 
     }
-
-
 
     //option1
     private void searchBook(){
@@ -95,6 +94,7 @@ public class Main {
                     .collect(Collectors.toList());
             book.setAuthorList(authorList);
             //check if the book is not registered on db
+            chargeBooksDb(); //charge db
             if (compareBooks(book)){
                 bookRepository.save(book);
             }else {
@@ -117,12 +117,18 @@ public class Main {
 
     //option2
     private void showBooks() {
+        var booksdb = chargeBooksDb();
+        booksdb.forEach(System.out::println);
+    }
+    private List<Book> chargeBooksDb(){
         bookDb = bookRepository.findAll();
-        bookDb.forEach(System.out::println);
+        return bookDb;
     }
 
     //option3
     private void showAuthors() {
+        authorDb = authorRepository.findAll();
+        authorDb.forEach(System.out::println);
     }
     //option4
     //option5
