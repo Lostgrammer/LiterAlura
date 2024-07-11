@@ -13,8 +13,8 @@ public class Book {
     @Column(unique = true)
     private String title;
     private String copyright;
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    private List<Author> authorList; //mal, debe ser de la clase author
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Author> authorList;
 
     public Book(){}
 
@@ -30,8 +30,26 @@ public class Book {
         return authorList;
     }
     public void setAuthorList(List<Author> authorList) {
-        authorList.forEach(e -> e.setBook(this));
+        authorList.forEach(a -> a.setBook(this));
         this.authorList = authorList;
+    }
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public String getCopyright() {
+        return copyright;
+    }
+    public void setCopyright(String copyright) {
+        this.copyright = copyright;
     }
 
     @Override
